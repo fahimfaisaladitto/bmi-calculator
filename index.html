@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="main-card relative w-full max-w-md border rounded-2xl shadow-2xl p-8 fade-in">
+        
+        <!-- Dark Mode Toggle -->
+        <div class="absolute top-5 right-5">
+            <input type="checkbox" id="darkModeToggle" class="hidden"/>
+            <label for="darkModeToggle" class="toggle-bg w-14 h-8 rounded-full flex items-center p-1 cursor-pointer transition-colors">
+                <span class="toggle-ball w-6 h-6 rounded-full shadow-md transform transition-transform duration-300 ease-in-out" id="toggleBall">
+                    <svg id="sunIcon" class="w-4 h-4 m-1 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <svg id="moonIcon" class="w-4 h-4 m-1 text-sky-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </span>
+            </label>
+        </div>
+
+        <!-- Icon and Header Text -->
+        <div class="text-center mb-6">
+             <div class="inline-block p-3 bg-black/5 rounded-full mb-4">
+                <!-- BMI Icon -->
+                <svg class="w-10 h-10 accent-text" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold">BMI Calculator</h1>
+            <p class="mt-1" style="color: var(--text-secondary);">Check your Body Mass Index.</p>
+        </div>
+        
+        <!-- Inputs -->
+        <div class="space-y-4">
+            <div>
+                 <label class="block mb-2 text-sm font-medium" style="color: var(--text-secondary);">Age</label>
+                 <input type="number" id="age" class="input-field w-full rounded-lg px-3 py-2" placeholder="">
+            </div>
+            <div>
+                 <label class="block mb-2 text-sm font-medium" style="color: var(--text-secondary);">Weight (kg)</label>
+                 <input type="number" id="weight" class="input-field w-full rounded-lg px-3 py-2" placeholder="">
+            </div>
+            <div class="flex gap-4">
+                <div class="flex-1">
+                     <label class="block mb-2 text-sm font-medium" style="color: var(--text-secondary);">Height (ft)</label>
+                     <input type="number" id="feet" class="input-field w-full rounded-lg px-3 py-2" placeholder="">
+                </div>
+                <div class="flex-1">
+                     <label class="block mb-2 text-sm font-medium" style="color: var(--text-secondary);">Height (in)</label>
+                     <input type="number" id="inches" class="input-field w-full rounded-lg px-3 py-2" placeholder="">
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Display -->
+        <div id="resultContainer" class="hidden mt-6 text-center">
+            <div class="relative w-full max-w-xs mx-auto">
+                <svg viewBox="0 0 120 70" class="w-full">
+                    <!-- Category Arcs -->
+                    <path id="underweightArc" stroke="#3B82F6" stroke-width="10" fill="none" />
+                    <path id="normalArc" stroke="#10B981" stroke-width="10" fill="none" />
+                    <path id="overweightArc" stroke="#F59E0B" stroke-width="10" fill="none" />
+                    <path id="obesityArc" stroke="#EF4444" stroke-width="10" fill="none" />
+                    
+                    <!-- Needle -->
+                    <g id="bmiGaugeNeedle" transform="rotate(-90)">
+                        <path d="M 60 60 L 60 15" stroke-width="2" style="stroke: var(--text-primary);" />
+                        <circle cx="60" cy="60" r="4" style="fill: var(--text-primary);" />
+                    </g>
+                </svg>
+                 <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <p id="bmiValue" class="text-4xl font-bold">0.0</p>
+                    <p style="color: var(--text-secondary);">BMI</p>
+                </div>
+            </div>
+            <p id="bmiCategory" class="font-semibold text-lg p-2 rounded-lg mt-2"></p>
+        </div>
+         <p id="errorText" class="text-red-500 text-sm mt-2 text-center hidden"></p>
+
+        <div class="mt-6 space-y-4">
+            <button id="calculateBtn" class="w-full text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-105" style="background-color: var(--accent-color);">Calculate BMI</button>
+            <button id="clearBtn" class="w-full font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-105" style="background-color: var(--input-bg); color: var(--text-secondary);">Clear</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
